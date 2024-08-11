@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Página de perfil do usuário no Aghamenon Toberlock Estudos">
+    <meta name="author" content="Richard Aghamenon - Estudante do Ensino Médio">
+    <meta name="keywords" content="Aghamenon Toberlock Estudos, perfil, usuário, foto, biografia">
+    <link rel="icon" href="aghamenonestudosiconv2.ico" type="image/x-icon">
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="profile.css">
+    <link rel="stylesheet" href="mobilemenu.css" />
+    <script src="menu.js" defer></script>
+    <script src="firebase-auth.js" defer></script>
+    <title>Perfil - Aghamenon Toberlock Estudos</title>
+</head>
+<body>
+    <section>
+        <header class="menu-computer">
+            <a class="logo">Aghamenon Toberlock Estudos</a>
+            <nav class="nav">
+                <button
+                  class="btn-menu"
+                  aria-label="Abrir Menu"
+                  aria-haspopup="true"
+                  aria-controls="menu"
+                  aria-expanded="false"
+                >
+                  Menu<span class="hamburger"></span>
+                </button>
+                <ul class="menu" id="menu" role="menu">
+                    <li><a href="./">Início</a></li>
+                    <li><a href="Serviços.html">Serviços</a></li>
+                    <li><a href="Simulado.html">Simulado</a></li>
+                    <li><a href="Contato.html">Suporte</a></li>
+                    <li id="auth-menu-item" style="display: none;"><a href="auth.html">Login / Registro</a></li>
+                    <li id="profile-menu-item" style="display: block;"><a href="profile.html">Perfil</a></li>
+                    <li id="logout-menu-item" style="display: none;"><a href="#" id="logout-button">Logout</a></li>
+                </ul>
+            </nav>
+        </header>
+
+        <main>
+            <div class="profile-container">
+                <div class="profile-header">
+                    <img id="profile-photo" src="" alt="Foto do Usuário">
+                    <h1 id="profile-name">Nome do Usuário</h1>
+                </div>
+                <div class="profile-bio">
+                    <p id="profile-bio-text">Biografia do Usuário</p>
+                </div>
+            </div>
+        </main>
+
+        <script type="module">
+            import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+            import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
+
+            const firebaseConfig = {
+                apiKey: "AIzaSyDr27BIHswRcTvvE5lUpR-l4OMGwGFQQaw",
+                authDomain: "meliodaslogin-bae06.firebaseapp.com",
+                projectId: "meliodaslogin-bae06",
+                storageBucket: "meliodaslogin-bae06.appspot.com",
+                messagingSenderId: "292569281051",
+                appId: "1:292569281051:web:473895afda6419bc747ebe",
+                measurementId: "G-3N0G8EFNMV"
+            };
+
+            const app = initializeApp(firebaseConfig);
+            const auth = getAuth(app);
+
+            onAuthStateChanged(auth, (user) => {
+                if (user) {
+                    document.getElementById('profile-photo').src = user.photoURL || 'default-profile-pic.jpg'; // Coloque a URL da foto ou uma foto padrão
+                    document.getElementById('profile-name').textContent = user.displayName || 'Nome do Usuário';
+                    document.getElementById('profile-bio-text').textContent = 'Aqui você pode adicionar informações sobre o usuário, se houver'; // Atualize conforme necessário
+                    document.getElementById('auth-menu-item').style.display = 'none';
+                    document.getElementById('profile-menu-item').style.display = 'block';
+                    document.getElementById('logout-menu-item').style.display = 'block';
+                } else {
+                    document.getElementById('profile-menu-item').style.display = 'none';
+                    document.getElementById('auth-menu-item').style.display = 'block';
+                    document.getElementById('logout-menu-item').style.display = 'none';
+                }
+            });
+
+            document.getElementById('logout-button').addEventListener('click', () => {
+                auth.signOut().then(() => {
+                    window.location.href = 'auth.html'; // Redireciona para a página de login após logout
+                }).catch((error) => {
+                    console.error('Erro ao sair:', error);
+                });
+            });
+        </script>
+    </section>
+</body>
+</html>
+

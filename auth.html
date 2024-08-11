@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="auth.css">
+    <script type="module" src="firebase-auth.js"></script>
+    <title>Aghamenon Toberlock Estudos</title>
+</head>
+<body>
+    <!-- Notificação temporária -->
+    <div id="notification" class="notification"></div>
+    <div class="container" id="container">
+        <div class="form-container sign-up">
+            <form id="signup-form">
+                <h1>Criar uma Conta</h1>
+                <div class="social-login">
+                    <button id="google-register" type="button" class="social-button">
+                        <i class="fa-brands fa-google"></i> Registrar com Google
+                    </button>
+                </div>
+                <span>ou use seu e-mail para cadastro</span>
+                <input type="text" id="username-register" placeholder="Nome de Usuário">
+                <input type="email" id="email-register" placeholder="Email">
+                <input type="password" id="password-register" placeholder="Senha">
+                <div class="show-password-container">
+                    <input type="checkbox" id="show-password-register">
+                    <label for="show-password-register">Mostrar senha</label>
+                </div>
+                <button type="button" id="register-button">Registrar</button>
+            </form>
+        </div>
+        <div class="form-container sign-in">
+            <form id="signin-form">
+                <h1>Entrar</h1>
+                <div class="social-login">
+                    <button id="google-login" type="button" class="social-button">
+                        <i class="fa-brands fa-google"></i> Entrar com Google
+                    </button>
+                </div>
+                <span>ou use email e senha para entrar</span>
+                <input type="email" id="email-login" placeholder="Email">
+                <input type="password" id="password-login" placeholder="Senha">
+                <div class="show-password-container">
+                    <input type="checkbox" id="show-password-login">
+                    <label for="show-password-login">Mostrar senha</label>
+                </div>
+                <a href="reset-password.html" id="forgot-password">Esqueceu sua senha?</a>
+                <button type="button" id="login-button">Entrar</button>
+            </form>
+        </div>
+        <div class="toggle-container">
+            <div class="toggle">
+                <div class="toggle-panel toggle-left">
+                    <h1>Bem-vindo!</h1>
+                    <p>Faça login em sua conta para acessar todos os recursos do nosso site.</p>
+                    <button class="hidden" id="signIn">Entrar</button>
+                </div>
+                <div class="toggle-panel toggle-right">
+                    <h1>Olá, Estudante!</h1>
+                    <p>Caso não tenha uma conta, registre-se para acessar todos os recursos do nosso site.</p>
+                    <button class="hidden" id="signUp">Registrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const container = document.getElementById('container');
+
+        document.getElementById('signUp').addEventListener('click', () => {
+            container.classList.add('active');
+        });
+
+        document.getElementById('signIn').addEventListener('click', () => {
+            container.classList.remove('active');
+        });
+
+        const notificationElement = document.getElementById("notification");
+
+        function showNotification(message) {
+            notificationElement.textContent = message;
+            notificationElement.classList.add("show");
+            setTimeout(() => {
+                notificationElement.classList.remove("show");
+            }, 3000);
+        }
+
+        // Mostrar notificação após 1 segundo
+        setTimeout(() => {
+            showNotification("Página carregada com sucesso!");
+        }, 1000);
+
+        // Script para mostrar/ocultar senha
+        document.getElementById('show-password-register').addEventListener('change', function () {
+            const passwordField = document.getElementById('password-register');
+            if (this.checked) {
+                passwordField.type = 'text';
+            } else {
+                passwordField.type = 'password';
+            }
+        });
+
+        document.getElementById('show-password-login').addEventListener('change', function () {
+            const passwordField = document.getElementById('password-login');
+            if (this.checked) {
+                passwordField.type = 'text';
+            } else {
+                passwordField.type = 'password';
+            }
+        });
+    </script>
+</body>
+</html>

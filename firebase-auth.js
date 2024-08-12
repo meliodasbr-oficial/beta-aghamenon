@@ -20,6 +20,8 @@ const analytics = getAnalytics(app);
 const auth = getAuth();
 const db = getFirestore(app);
 
+const forbiddenUsernames = ['aghamenon toberlock estudos', 'aghamenon toberlock estudo', 'aghamenon toberlock estud', 'aghamenon toberlock estu', 'aghamenon toberlock est', 'aghamenon toberlock es', 'aghamenon toberlock e', 'aghamenon toberlock', 'aghamenon toberloc', 'aghamenon toberlo', 'aghamenon toberl', 'aghamenon tober', 'aghamenon tobe', 'aghamenon tob', 'aghamenon to', 'aghamenon t', 'aghamenon', 'aghamenont', 'aghamenonto', 'aghamenontob', 'aghamenontobe', 'aghamenontober', 'aghamenontoberl', 'aghamenontoberlo', 'aghamenontoberloc', 'aghamenontoberlock', 'aghamenontoberlocke', 'aghamenontoberlockes', 'aghamenontoberlockest', 'aghamenontoberlockestu', 'aghamenontoberlockestud', 'aghamenontoberlockestudo', 'aghamenontoberlockestudos', 'aghamenon-toberlock-estudos', 'aghamenon-toberlockestudos', 'aghamenontoberlock-estudos', 'aghamenon_toberlockestudos', 'aghamenon_toberlock_estudos', 'aghamenontoberlock_estudos']; // Adicione outros nomes proibidos aqui, todos em minúsculas
+
 // Função para exibir notificação
 function showNotification(message, duration = 3000) {
     const notification = document.getElementById('notification');
@@ -28,6 +30,12 @@ function showNotification(message, duration = 3000) {
     setTimeout(() => {
         notification.classList.remove('show');
     }, duration);
+}
+
+// Verifica se o nome de usuário está na lista de proibidos (insensível a maiúsculas e minúsculas)
+function isUsernameForbidden(username) {
+    const lowercaseUsername = username.toLowerCase();
+    return forbiddenUsernames.includes(lowercaseUsername);
 }
 
 // Gerar Game Tag Única
@@ -99,6 +107,10 @@ document.getElementById('google-login').addEventListener('click', () => {
                     // Se o usuário não existe, solicitar informações adicionais
                     const username = prompt('Digite um nome de usuário:');
                     if (username) {
+                        if (isUsernameForbidden(username)) {
+                            showNotification('Este nome de usuário não é permitido.');
+                            return;
+                        }
                         // Gerar Game Tag
                         generateUniqueGameTag(username).then((gameTag) => {
                             setDoc(doc(db, "users", user.uid), {
@@ -115,6 +127,9 @@ document.getElementById('google-login').addEventListener('click', () => {
                                 console.error('Erro ao salvar dados do usuário:', error);
                                 showNotification('Ocorreu um erro ao salvar os dados do usuário.');
                             });
+                        }).catch((error) => {
+                            console.error('Erro ao gerar Game Tag:', error);
+                            showNotification('Ocorreu um erro ao gerar o Game Tag.');
                         });
                     } else {
                         showNotification('Nome de usuário é obrigatório.');
@@ -142,6 +157,11 @@ document.getElementById('register-button').addEventListener('click', () => {
         return;
     }
 
+    if (isUsernameForbidden(username)) {
+        showNotification('Este nome de usuário não é permitido.');
+        return;
+    }
+
     createUserWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
             const user = userCredential.user;
@@ -161,6 +181,9 @@ document.getElementById('register-button').addEventListener('click', () => {
                     console.error('Erro ao salvar dados do usuário:', error);
                     showNotification('Ocorreu um erro ao salvar os dados do usuário.');
                 });
+            }).catch((error) => {
+                console.error('Erro ao gerar Game Tag:', error);
+                showNotification('Ocorreu um erro ao gerar o Game Tag.');
             });
         })
         .catch((error) => {
@@ -179,7 +202,6 @@ document.getElementById('google-register').addEventListener('click', () => {
     signInWithPopup(auth, provider)
         .then((result) => {
             const user = result.user;
-            // Verificar se o usuário já existe no Firestore
             getDoc(doc(db, "users", user.uid)).then((docSnapshot) => {
                 if (docSnapshot.exists()) {
                     const userData = docSnapshot.data();
@@ -191,7 +213,10 @@ document.getElementById('google-register').addEventListener('click', () => {
                     // Se o usuário não existe, solicitar informações adicionais
                     const username = prompt('Digite um nome de usuário:');
                     if (username) {
-                        // Gerar Game Tag
+                        if (isUsernameForbidden(username)) {
+                            showNotification('Este nome de usuário não é permitido.');
+                            return;
+                        }
                         generateUniqueGameTag(username).then((gameTag) => {
                             setDoc(doc(db, "users", user.uid), {
                                 uid: user.uid,
@@ -207,6 +232,9 @@ document.getElementById('google-register').addEventListener('click', () => {
                                 console.error('Erro ao salvar dados do usuário:', error);
                                 showNotification('Ocorreu um erro ao salvar os dados do usuário.');
                             });
+                        }).catch((error) => {
+                            console.error('Erro ao gerar Game Tag:', error);
+                            showNotification('Ocorreu um erro ao gerar o Game Tag.');
                         });
                     } else {
                         showNotification('Nome de usuário é obrigatório.');

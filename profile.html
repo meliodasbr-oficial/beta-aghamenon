@@ -15,13 +15,23 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     <link rel="stylesheet" href="profile.css">
     <link rel="stylesheet" href="mobilemenu.css" />
-    <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-storage.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js"></script>
-    <script type="module" src="profile.js"></script>    
+    <script type="module" src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js"></script>
+    <script type="module" src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js"></script>
+    <script type="module" src="https://www.gstatic.com/firebasejs/10.12.5/firebase-storage.js"></script>
+    <script type="module" src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js"></script>
+    <script type="module" type="module" src="profile.js"></script>    
     <script src="menu.js" defer></script>
+    <script src="console-protection.js" defer></script>
     <title>Perfil - Aghamenon Toberlock Estudos</title>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-D87TLWWWF7"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'G-D87TLWWWF7');
+    </script>
+</head>
 </head>
 <body>
     <section>
@@ -50,7 +60,7 @@
         <main>
             <div class="profile-container">
                 <div class="profile-header">
-                    <img id="profile-photo" src="" alt="Foto do Usuário">
+                    <img id="profile-photo" src="default-profile-pic.jpg" alt="Foto do Usuário">
                     <input type="file" id="upload-photo" style="display: none;">
                     <button id="change-photo-button">Trocar Foto</button>
                     <div class="edit-container">

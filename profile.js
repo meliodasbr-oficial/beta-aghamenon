@@ -18,9 +18,16 @@ const auth = getAuth(app);
 const storage = getStorage(app);
 const firestore = getFirestore(app);
 
+const forbiddenUsernames = ['aghamenon toberlock estudos', 'aghamenon toberlock estudo', 'aghamenon toberlock estud', 'aghamenon toberlock estu', 'aghamenon toberlock est', 'aghamenon toberlock es', 'aghamenon toberlock e', 'aghamenon toberlock', 'aghamenon toberloc', 'aghamenon toberlo', 'aghamenon toberl', 'aghamenon tober', 'aghamenon tobe', 'aghamenon tob', 'aghamenon to', 'aghamenon t', 'aghamenon', 'aghamenont', 'aghamenonto', 'aghamenontob', 'aghamenontobe', 'aghamenontober', 'aghamenontoberl', 'aghamenontoberlo', 'aghamenontoberloc', 'aghamenontoberlock', 'aghamenontoberlocke', 'aghamenontoberlockes', 'aghamenontoberlockest', 'aghamenontoberlockestu', 'aghamenontoberlockestud', 'aghamenontoberlockestudo', 'aghamenontoberlockestudos', 'aghamenon-toberlock-estudos', 'aghamenon-toberlockestudos', 'aghamenontoberlock-estudos', 'aghamenon_toberlockestudos', 'aghamenon_toberlock_estudos', 'aghamenontoberlock_estudos']; // Adicione outros nomes proibidos aqui, todos em minúsculas
+
 function generateGametag(username) {
     const tagNumber = Math.floor(Math.random() * 10000).toString().padStart(4, '0');
     return `${username}#${tagNumber}`;
+}
+
+function isUsernameForbidden(username) {
+    const lowercaseUsername = username.toLowerCase();
+    return forbiddenUsernames.includes(lowercaseUsername);
 }
 
 async function updateUserProfile(user, data) {
@@ -32,7 +39,6 @@ onAuthStateChanged(auth, (user) => {
     if (user) {
         console.log("Usuário autenticado:", user);
 
-        // Mostrar o botão de logout
         document.getElementById('logout-menu-item').style.display = 'block';
 
         const userDocRef = doc(firestore, `users/${user.uid}`);
@@ -113,6 +119,11 @@ onAuthStateChanged(auth, (user) => {
             confirmButton.addEventListener('click', async () => {
                 const newName = nameInput.value.trim();
                 if (newName) {
+                    if (isUsernameForbidden(newName)) {
+                        alert('Este nome de usuário não é permitido.');
+                        return;
+                    }
+
                     try {
                         await updateUserProfile(user, { username: newName });
                         document.getElementById('profile-name').textContent = newName;
